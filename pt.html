@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tic Tac Toe</title>
+<style>
+    *{margin:0; padding:0; box-sizing:border-box; font-family:sans-serif;}
+    body{
+        background: linear-gradient(135deg, #03045e, #0077b6);
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        min-height:100vh;
+    }
+    h1{
+        color:#fff;
+        text-align:center;
+        font-size:2.5rem;
+        margin-bottom:20px;
+        text-shadow: 0 0 10px #ffdd00, 0 0 20px #ff6f61;
+    }
+    .game{
+        display:grid;
+        grid-template-columns:repeat(3, 100px);
+        grid-template-rows:repeat(3, 100px);
+        gap:10px;
+        background:#fff;
+        padding:15px;
+        border-radius:15px;
+        box-shadow:0 0 20px rgba(0,0,0,0.5);
+    }
+    .box{
+        background:#000;
+        border-radius:10px;
+        border:none;
+        font-size:2rem;
+        font-weight:bold;
+        cursor:pointer;
+        color:#fff;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        transition:0.3s;
+    }
+    .box:hover{
+        transform:scale(1.1);
+        box-shadow:0 0 15px #ff6f61;
+    }
+    .X{color:#ff0000; text-shadow:0 0 8px #ff4d4d;}
+    .O{color:#18f804; text-shadow:0 0 8px #83c5be;}
+    .info{
+        margin-top:20px;
+        font-size:1.2rem;
+        color:#fff;
+    }
+    .reset-btn{
+        margin-top:20px;
+        padding:10px 25px;
+        font-size:1.2rem;
+        border-radius:20px;
+        border:none;
+        cursor:pointer;
+        background:linear-gradient(45deg,#ffb703,#fb8500);
+        color:#000;
+        box-shadow:0 0 10px #ff0303,0 0 20px #37993c;
+    }
+</style>
+</head>
+<body>
+
+<h1>Tic Tac Toe</h1>
+<div class="game">
+    <button class="box" id="b1"></button>
+    <button class="box" id="b2"></button>
+    <button class="box" id="b3"></button>
+    <button class="box" id="b4"></button>
+    <button class="box" id="b5"></button>
+    <button class="box" id="b6"></button>
+    <button class="box" id="b7"></button>
+    <button class="box" id="b8"></button>
+    <button class="box" id="b9"></button>
+</div>
+<p class="info">Player X Turn</p>
+<button class="reset-btn" onclick="resetGame()">Reset</button>
+
+<script>
+let turn = "X"; // First player = X
+let boxes = document.querySelectorAll(".box");
+let info = document.querySelector(".info");
+
+boxes.forEach(box=>{
+    box.addEventListener("click",()=>{
+        if(box.innerText===""){ 
+            box.innerText = turn;
+            box.classList.add(turn);
+            if(checkWin()){
+                info.innerText = "Player " + turn + " Won 🎉";
+                disableAll();
+            }else if(isDraw()){
+                info.innerText = "Game Draw 🤝";
+            }else{
+                turn = (turn==="X") ? "O" : "X";
+                info.innerText = "Player " + turn + " Turn";
+            }
+        }
+    });
+});
+
+// Win logic
+function checkWin(){
+    let b = Array.from(boxes).map(x=>x.innerText);
+    let winPatterns = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+    ];
+    return winPatterns.some(p=> b[p[0]] && b[p[0]]===b[p[1]] && b[p[1]]===b[p[2]]);
+}
+
+// Draw check
+function isDraw(){
+    return [...boxes].every(b=>b.innerText!=="");
+}
+
+// Disable all buttons
+function disableAll(){
+    boxes.forEach(b=>b.disabled=true);
+}
+
+// Reset game
+function resetGame(){
+    turn="X";
+    info.innerText="Player X Turn";
+    boxes.forEach(b=>{
+        b.innerText="";
+        b.disabled=false;
+        b.classList.remove("X","O");
+    });
+}
+</script>
+</body>
+</html>
